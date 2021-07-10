@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: startup-pod
+  labels:
+    app: goproxy
+spec:
+  containers:
+  - name: startup-pod
+    image: k8s.gcr.io/goproxy:0.1
+    ports:
+    - name: liveness-port
+      containerPort: 8080
+      hostPort: 8080
+
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: liveness-port
+      failureThreshold: 1
+      periodSeconds: 10
+
+    startupProbe:
+      httpGet:
+        path: /healthz
+        port: liveness-port
+      failureThreshold: 3
+      periodSeconds: 10
+                                                                                                                                     ~                          
